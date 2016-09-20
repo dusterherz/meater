@@ -14,7 +14,7 @@ Import the project on Android Studio to run in on your phone. When the first dra
 
 # Credits
 
-Meat icon made by (Freepik)[http://www.freepik.com/] from (flaticon)[www.flaticon.com]
+Meat icon made by [Freepik](http://www.freepik.com/) from [flaticon](www.flaticon.com)
 
 # License
 
