@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Meater</string>
+    <string name="log_meat">Enrengistrez votre %1$s :</string>
+    <string name="meat">meat</string>
+    <string name="no_meat">no Meat</string>
+    <string name="consumption_week">Cette semaine, Vous avez consommé de la viande sur</string>
+    <string name="number_times_meat">%1$d repas</string>
+    <string name="saved_quantity">saved_quantity</string>
 </resources>

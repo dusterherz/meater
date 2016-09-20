@@ -9,8 +9,16 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.dusterherz.meater.MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <include layout="@layout/add_meat"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:id="@+id/cardboard_add_meat" />
+
+    <include layout="@layout/meat_counter"
+        android:id="@+id/cardboard_counter_meat"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:layout_marginTop="16dp"
+        android:layout_below="@id/cardboard_add_meat"/>
+
 </RelativeLayout>
