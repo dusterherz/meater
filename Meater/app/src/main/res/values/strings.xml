@@ -6,4 +6,5 @@
     <string name="consumption_week">Cette semaine, Vous avez consommé de la viande sur</string>
     <string name="number_times_meat">%1$d repas</string>
     <string name="saved_quantity">saved_quantity</string>
+    <string name="saved_week">saved_week</string>
 </resources>

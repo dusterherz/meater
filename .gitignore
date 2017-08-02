@@ -38,3 +38,13 @@ captures/
 
 # Keystore files
 *.jks
+
+Meater/gradlew
+
+Meater/gradlew\.bat
+
+Meater/gradle/wrapper/gradle-wrapper\.jar
+
+Meater/gradle/wrapper/gradle-wrapper\.properties
+
+Meater/\.idea/
