@@ -7,4 +7,22 @@
     <string name="number_times_meat">%1$d repas</string>
     <string name="saved_quantity">saved_quantity</string>
     <string name="saved_week">saved_week</string>
+    <string name="breakfast">petit-déjeuner</string>
+    <string name="lunch">déjeuner</string>
+    <string name="snack">goûter</string>
+    <string name="dinner">dîner</string>
+    <string name="title_activity_login">Connexion</string>
+
+    <!-- Strings related to login -->
+    <string name="error_invalid_email">Cette email est invalide</string>
+    <string name="error_invalid_password">Ce mot de passe est trop court</string>
+    <string name="txt_email">Email :</string>
+    <string name="txt_password">Mot de passe :</string>
+    <string name="btn_login">Connexion</string>
+    <string name="error_register">L\'inscription a échoué, merci de réessayer.</string>
+    <string name="error_authentification">L\'authetification a échouché, merci de réesayer.</string>
+    <string name="txt_password_check">Confirmez le mot de passe :</string>
+    <string name="error_invalid_check_password">Les mots de passe ne sont pas identiques.</string>
+    <string name="txt_signin">Pas encore inscrit ?</string>
+    <string name="txt_login">Vous possédez déjà un compte ?</string>
 </resources>

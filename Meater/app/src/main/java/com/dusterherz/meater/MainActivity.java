@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 public class MainActivity extends AppCompatActivity {
     private Calendar c = Calendar.getInstance();
 
@@ -28,16 +30,16 @@ public class MainActivity extends AppCompatActivity {
 
         //Set current meal time
         if (time < 11) {
-            currentMeal = "petit-déjeuner";
+            currentMeal = getString(R.string.breakfast);
         }
         else if (time < 14) {
-            currentMeal = "déjeuner";
+            currentMeal = getString(R.string.lunch);
         }
         else if (time < 17) {
-            currentMeal = "goûter";
+            currentMeal = getString(R.string.snack);
         }
         else {
-            currentMeal = "dîner";
+            currentMeal = getString(R.string.dinner);
         }
         String log_meat_text = String.format(res.getString(R.string.log_meat), currentMeal);
         TextView t_log_meat = (TextView)findViewById(R.id.textview_log_meat);

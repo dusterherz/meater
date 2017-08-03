@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "865626578083",
+    "firebase_url": "https://meater-5e192.firebaseio.com",
+    "project_id": "meater-5e192",
+    "storage_bucket": "meater-5e192.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:865626578083:android:ef86ab6cfa7c27a0",
+        "android_client_info": {
+          "package_name": "com.dusterherz.meater"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "865626578083-fl6qjt0cvl01h545e82terlgk6tebjso.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dusterherz.meater",
+            "certificate_hash": "01f1deae26ac5859398a299343191234861e85dc"
+          }
+        },
+        {
+          "client_id": "865626578083-1diajoc2tiqstrtb105ko36he7u19ql0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA2QvB45ySZs_1vhwdIWgRaTYq3e-1Ni34"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "865626578083-1diajoc2tiqstrtb105ko36he7u19ql0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
