@@ -1,6 +1,7 @@
 package com.dusterherz.meater;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -24,6 +25,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class LoginActivity extends AppCompatActivity {
+    public static final String EXTRA_USER_UID = "com.dusterherz.meater.USER_UID";
     private FirebaseAuth mAuth;
     private Button mBtnSend;
     private EditText mEdtEmail;
@@ -52,6 +54,9 @@ public class LoginActivity extends AppCompatActivity {
 
 
         mAuth = FirebaseAuth.getInstance();
+        if (mAuth.getCurrentUser() != null) {
+            openMainActivity(mAuth.getCurrentUser());
+        }
     }
 
     private View.OnClickListener login = new View.OnClickListener() {
@@ -143,7 +148,7 @@ public class LoginActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             FirebaseUser user = mAuth.getCurrentUser();
-                            //TODO: update to main page
+                            openMainActivity(user);
                         } else {
                             Toast.makeText(LoginActivity.this, R.string.error_register,
                                     Toast.LENGTH_SHORT).show();
@@ -159,12 +164,19 @@ public class LoginActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             FirebaseUser user = mAuth.getCurrentUser();
-                            //TODO: update to main page
+                            openMainActivity(user);
                         } else {
                             Toast.makeText(LoginActivity.this, R.string.error_authentification,
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
+    }
+
+    private void openMainActivity(FirebaseUser user) {
+        String uid = user.getUid();
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra(EXTRA_USER_UID, uid);
+        startActivity(intent);
     }
 }
