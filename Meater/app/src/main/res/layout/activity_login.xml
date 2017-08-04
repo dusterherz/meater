@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="@dimen/activity_horizontal_margin"
     tools:context="com.dusterherz.meater.LoginActivity">
 
@@ -28,29 +29,45 @@
         android:layout_below="@id/edt_email"
         android:text="@string/txt_password"/>
 
-    <EditText
-        android:id="@+id/edt_password"
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/til_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/txt_password"
-        android:inputType="textPassword"/>
+        app:passwordToggleEnabled="true"
+        android:layout_below="@id/txt_password">
+        
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/edt_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"/>
+        
+    </android.support.design.widget.TextInputLayout>
 
     <TextView
         android:id="@+id/txt_password_check"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:layout_below="@id/edt_password"
+        android:layout_below="@id/til_password"
         android:visibility="gone"
         android:text="@string/txt_password_check"/>
 
-    <EditText
-        android:id="@+id/edt_password_check"
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/til_password_check"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:passwordToggleEnabled="true"
         android:layout_below="@id/txt_password_check"
-        android:visibility="gone"
-        android:inputType="textPassword"/>
+        android:visibility="gone">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/edt_password_check"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"/>
+
+    </android.support.design.widget.TextInputLayout>
 
     <TextView
         android:id="@+id/txt_signin"
@@ -58,7 +75,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:layout_below="@id/edt_password_check"
+        android:layout_below="@id/til_password_check"
         android:text="@string/txt_signin"
         android:textColor="@color/colorPrimaryDark"/>
 
@@ -72,6 +89,7 @@
         android:paddingStart="@dimen/button_horizontal_margin"
         android:paddingEnd="@dimen/button_horizontal_margin"
         android:textColor="@color/white"
-        android:background="@color/colorPrimary"
-        android:text="@string/btn_login"/>
+        android:text="@string/btn_login"
+        style="@style/Widget.AppCompat.Button.Colored"/>
+
 </android.widget.RelativeLayout>
