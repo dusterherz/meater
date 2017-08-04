@@ -3,6 +3,8 @@ package com.dusterherz.meater;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.ButtonBarLayout;
@@ -29,8 +31,10 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private Button mBtnSend;
     private EditText mEdtEmail;
-    private EditText mEdtPassword;
-    private EditText mEdtPasswordConfirm;
+    private TextInputLayout mTilPassword;
+    private TextInputEditText mEdtPassword;
+    private TextInputLayout mTilPasswordConfirm;
+    private TextInputEditText mEdtPasswordConfirm;
     private TextView mTxtChangeLoginMode;
 
     @Override
@@ -44,8 +48,10 @@ public class LoginActivity extends AppCompatActivity {
         mBtnSend.setOnClickListener(login);
 
         mEdtEmail = (EditText) findViewById(R.id.edt_email);
-        mEdtPassword = (EditText) findViewById(R.id.edt_password);
-        mEdtPasswordConfirm = (EditText) findViewById(R.id.edt_password_check);
+        mTilPassword = (TextInputLayout) findViewById(R.id.til_password);
+        mEdtPassword = (TextInputEditText) findViewById(R.id.edt_password);
+        mTilPasswordConfirm = (TextInputLayout) findViewById(R.id.til_password_check);
+        mEdtPasswordConfirm = (TextInputEditText) findViewById(R.id.edt_password_check);
         mTxtChangeLoginMode = (TextView) findViewById(R.id.txt_signin);
         mEdtEmail.setOnFocusChangeListener(setTextBlack);
         mEdtPassword.setOnFocusChangeListener(setTextBlack);
@@ -63,8 +69,8 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             mEdtEmail.clearFocus();
-            mEdtPassword.clearFocus();
-            mEdtPasswordConfirm.clearFocus();
+            mTilPassword.clearFocus();
+            mTilPasswordConfirm.clearFocus();
             mBtnSend.requestFocus();
             if (!isEmailValid(mEdtEmail.getText().toString())) {
                 mEdtEmail.setTextColor(getResources().getColor(R.color.error));
@@ -82,7 +88,7 @@ public class LoginActivity extends AppCompatActivity {
                         .show();
                 return;
             }
-            if (mEdtPasswordConfirm.getVisibility() == View.VISIBLE &&
+            if (mTilPasswordConfirm.getVisibility() == View.VISIBLE &&
                     !isPasswordCheckValid(mEdtPassword.getText().toString(),
                     mEdtPasswordConfirm.getText().toString())) {
                 mEdtPasswordConfirm.setTextColor(getResources().getColor(R.color.error));
@@ -92,7 +98,7 @@ public class LoginActivity extends AppCompatActivity {
                         .show();
                 return;
             }
-            if (mEdtPasswordConfirm.getVisibility() == View.VISIBLE) {
+            if (mTilPasswordConfirm.getVisibility() == View.VISIBLE) {
                 createNewUser(mEdtEmail.getText().toString(), mEdtPassword.getText().toString());
             } else {
                 signInUser(mEdtEmail.getText().toString(), mEdtPassword.getText().toString());
@@ -114,12 +120,12 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             TextView txtPasswordConfirm = (TextView) findViewById(R.id.txt_password_check);
-            if (mEdtPasswordConfirm.getVisibility() == View.VISIBLE) {
-                mEdtPasswordConfirm.setVisibility(View.GONE);
+            if (mTilPasswordConfirm.getVisibility() == View.VISIBLE) {
+                mTilPasswordConfirm.setVisibility(View.GONE);
                 txtPasswordConfirm.setVisibility(View.GONE);
                 mTxtChangeLoginMode.setText(R.string.txt_signin);
             } else {
-                mEdtPasswordConfirm.setVisibility(View.VISIBLE);
+                mTilPasswordConfirm.setVisibility(View.VISIBLE);
                 txtPasswordConfirm.setVisibility(View.VISIBLE);
                 mTxtChangeLoginMode.setText(R.string.txt_login);
             }
