@@ -60,7 +60,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private View.OnClickListener login = new View.OnClickListener() {
+    private final View.OnClickListener login = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             mEdtEmail.clearFocus();
@@ -101,7 +101,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     };
 
-    private View.OnFocusChangeListener setTextBlack = new View.OnFocusChangeListener() {
+    private final View.OnFocusChangeListener setTextBlack = new View.OnFocusChangeListener() {
         @Override
         public void onFocusChange(View v, boolean hasFocus) {
             if (hasFocus) {
@@ -110,7 +110,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     };
 
-    private View.OnClickListener changeLoginMode = new View.OnClickListener() {
+    private final View.OnClickListener changeLoginMode = new View.OnClickListener() {
 
         @Override
         public void onClick(View v) {

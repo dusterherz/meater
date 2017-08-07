@@ -9,7 +9,6 @@ import java.util.Comparator;
 import java.util.Date;
 
 import android.content.Intent;
-import android.content.res.Resources;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,9 +16,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.dusterherz.meater.R;
 import com.dusterherz.meater.models.Consumption;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -44,7 +41,6 @@ public class MainActivity extends AppCompatActivity {
                 mDatabase = FirebaseDatabase.getInstance().getReference();
 
         //Init
-        Resources res = getResources();
         int time = c.get(Calendar.HOUR_OF_DAY);
         String currentMeal;
 
@@ -93,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
                 Date now = calendar.getTime();
                 String timestamp = simpleDateFormat.format(now);
                 if (consumption.history == null) {
-                    consumption.history = new ArrayList<String>();
+                    consumption.history = new ArrayList<>();
                 }
                 if (!consumption.history.contains(timestamp)) {
                     consumption.history.add(timestamp);
@@ -111,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void updateConsumptionUi() {
+    private void updateConsumptionUi() {
         final Consumption newConsumption = new Consumption(0, new ArrayList<String>());
 
         Log.d(TAG, "Update Interface");
@@ -159,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
     private void checkWeeklyClean(Consumption consumption) {
         Collections.sort(consumption.history, new StringDateComparator());
         String lastConsumption = consumption.history.get(consumption.history.size() - 1);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try {
             Date date = dateFormat.parse(lastConsumption);
             Calendar cal = Calendar.getInstance();
@@ -167,9 +163,7 @@ public class MainActivity extends AppCompatActivity {
             if (cal.get(Calendar.WEEK_OF_YEAR) != c.get(Calendar.WEEK_OF_YEAR)) {
                 resetWeeklyConsumption();
             }
-        } catch (ParseException e) {
-            return;
-        }
+        } catch (ParseException e) { }
     }
 
     private void resetWeeklyConsumption() {
@@ -188,9 +182,9 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    class StringDateComparator implements Comparator<String>
+    private class StringDateComparator implements Comparator<String>
     {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         public int compare(String lhs, String rhs)
         {
             try {

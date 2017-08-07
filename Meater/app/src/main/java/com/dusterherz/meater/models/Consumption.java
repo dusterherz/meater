@@ -14,9 +14,7 @@ public class Consumption {
     public int weekly;
     public List<String> history;
 
-    public Consumption() {
-
-    }
+    public Consumption() { }
 
     public Consumption(int weekly, List<String> history) {
         this.weekly = weekly;
