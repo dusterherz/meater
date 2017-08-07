@@ -20,9 +20,11 @@
     <string name="txt_password">Mot de passe :</string>
     <string name="btn_login">Connexion</string>
     <string name="error_register">L\'inscription a échoué, merci de réessayer.</string>
-    <string name="error_authentification">L\'authetification a échouché, merci de réesayer.</string>
+    <string name="error_authentification">L\'authetification a échoué. Vérifiez votre email et mot de passe.</string>
     <string name="txt_password_check">Confirmez le mot de passe :</string>
     <string name="error_invalid_check_password">Les mots de passe ne sont pas identiques.</string>
     <string name="txt_signin">Pas encore inscrit ?</string>
     <string name="txt_login">Vous possédez déjà un compte ?</string>
+    <string name="error_update_data">La connexion a échoué. La consommation peut ne pas être à jour</string>
+    <string name="error_send_data">La connexion a échoué. Nous n\'avons pas pu ajouter votre repas. Merci de réessayer.</string>
 </resources>

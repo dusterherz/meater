@@ -17,7 +17,7 @@
     <include layout="@layout/meat_counter"
         android:id="@+id/cardboard_counter_meat"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="200dp"
         android:layout_marginTop="16dp"
         android:layout_below="@id/cardboard_add_meat"/>
 
