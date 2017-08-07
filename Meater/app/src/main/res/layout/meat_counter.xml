@@ -27,7 +27,8 @@
                 android:layout_centerVertical="true"
                 android:layout_centerHorizontal="true"
                 android:textSize="40sp"
-                android:text="@string/number_times_meat"/>
+                android:text="@string/number_times_meat"
+                android:visibility="invisible"/>
 
         </RelativeLayout>
 

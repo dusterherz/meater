@@ -6,7 +6,9 @@ import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -37,11 +39,6 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        mBtnSend = (Button) findViewById(R.id.btn_send);
-        mBtnSend.setFocusable(true);
-        mBtnSend.setFocusableInTouchMode(true);
-        mBtnSend.setOnClickListener(login);
-
         mEdtEmail = (EditText) findViewById(R.id.edt_email);
         mTilPassword = (TextInputLayout) findViewById(R.id.til_password);
         mEdtPassword = (TextInputEditText) findViewById(R.id.edt_password);
@@ -53,6 +50,9 @@ public class LoginActivity extends AppCompatActivity {
         mEdtPasswordConfirm.setOnFocusChangeListener(setTextBlack);
         mTxtChangeLoginMode.setOnClickListener(changeLoginMode);
 
+        mBtnSend = (Button) findViewById(R.id.btn_send);
+        mBtnSend.setFocusable(true);
+        mBtnSend.setOnClickListener(login);
 
         mAuth = FirebaseAuth.getInstance();
         if (mAuth.getCurrentUser() != null) {
@@ -118,10 +118,12 @@ public class LoginActivity extends AppCompatActivity {
             if (mTilPasswordConfirm.getVisibility() == View.VISIBLE) {
                 mTilPasswordConfirm.setVisibility(View.GONE);
                 txtPasswordConfirm.setVisibility(View.GONE);
+                mEdtPassword.setImeOptions(EditorInfo.IME_ACTION_DONE);
                 mTxtChangeLoginMode.setText(R.string.txt_signin);
             } else {
                 mTilPasswordConfirm.setVisibility(View.VISIBLE);
                 txtPasswordConfirm.setVisibility(View.VISIBLE);
+                mEdtPassword.setImeOptions(EditorInfo.IME_ACTION_NEXT);
                 mTxtChangeLoginMode.setText(R.string.txt_login);
             }
         }

@@ -12,11 +12,15 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dusterherz.meater.models.Consumption;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -63,6 +67,22 @@ public class MainActivity extends AppCompatActivity {
         txtCurrentMeal.setText(currentMeal);
 
         updateConsumptionUi();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.icn_logout) {
+            logout();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public void incrementMeatCounter(View v) {
@@ -134,6 +154,8 @@ public class MainActivity extends AppCompatActivity {
                 Consumption consumption = dataSnapshot.getValue(Consumption.class);
                 if (consumption != null) {
                     checkWeeklyClean(consumption);
+                    if (mTxtConsumption.getVisibility() == View.INVISIBLE)
+                        mTxtConsumption.setVisibility(View.VISIBLE);
                     mTxtConsumption.setText(String.format(getString(R.string.number_times_meat), consumption.weekly));
                     Log.d(TAG, "Update data");
                 }
@@ -145,10 +167,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Toast.makeText(MainActivity.this, R.string.error_update_data, Toast.LENGTH_SHORT)
-                    .show();
-            }
+            public void onCancelled(DatabaseError databaseError) { }
         });
     }
 
@@ -180,6 +199,12 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void logout() {
+        FirebaseAuth.getInstance().signOut();
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
     }
 
     private class StringDateComparator implements Comparator<String>
