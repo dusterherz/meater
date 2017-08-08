@@ -26,4 +26,5 @@
     <string name="error_update_data">La connexion a échoué. La consommation peut ne pas être à jour</string>
     <string name="error_send_data">La connexion a échoué. Nous n\'avons pas pu ajouter votre repas. Merci de réessayer.</string>
     <string name="logout">déconnexion</string>
+    <string name="title">Meater</string>
 </resources>
