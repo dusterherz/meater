@@ -11,6 +11,7 @@ import java.util.Date;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseReference mDatabase;
     private String mUserUid;
     private TextView mTxtConsumption;
+    private View mLogMeat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,26 +45,11 @@ public class MainActivity extends AppCompatActivity {
         mUserUid = intent.getStringExtra(LoginActivity.EXTRA_USER_UID);
         mTxtConsumption = (TextView) findViewById(R.id.txt_times_meat);
                 mDatabase = FirebaseDatabase.getInstance().getReference();
+        mLogMeat = findViewById(R.id.cardboard_add_meat);
 
         //Init
         int time = c.get(Calendar.HOUR_OF_DAY);
-        String currentMeal;
-
-        //Set current meal time
-        if (time < 11) {
-            currentMeal = getString(R.string.breakfast);
-        }
-        else if (time < 14) {
-            currentMeal = getString(R.string.lunch);
-        }
-        else if (time < 17) {
-            currentMeal = getString(R.string.snack);
-        }
-        else {
-            currentMeal = getString(R.string.dinner);
-        }
-
-        currentMeal = String.format(getString(R.string.log_meat), currentMeal);
+        String currentMeal = String.format(getString(R.string.log_meat), getCurrentMealTime(time));
         TextView txtCurrentMeal = (TextView)findViewById(R.id.textview_log_meat);
         txtCurrentMeal.setText(currentMeal);
 
@@ -104,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
 
                 // add date to calendar of consumption
                 SimpleDateFormat simpleDateFormat =
-                        new SimpleDateFormat("yyyy-MM-dd");
+                        new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
                 Calendar calendar = Calendar.getInstance();
                 Date now = calendar.getTime();
                 String timestamp = simpleDateFormat.format(now);
@@ -154,6 +141,7 @@ public class MainActivity extends AppCompatActivity {
                 Consumption consumption = dataSnapshot.getValue(Consumption.class);
                 if (consumption != null) {
                     checkWeeklyClean(consumption);
+                    checkIfAlreadyVoted(consumption);
                     if (mTxtConsumption.getVisibility() == View.INVISIBLE)
                         mTxtConsumption.setVisibility(View.VISIBLE);
                     mTxtConsumption.setText(String.format(getString(R.string.number_times_meat), consumption.weekly));
@@ -174,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
     private void checkWeeklyClean(Consumption consumption) {
         Collections.sort(consumption.history, new StringDateComparator());
         String lastConsumption = consumption.history.get(consumption.history.size() - 1);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         try {
             Date date = dateFormat.parse(lastConsumption);
             Calendar cal = Calendar.getInstance();
@@ -201,6 +189,27 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void checkIfAlreadyVoted(Consumption consumption) {
+        Collections.sort(consumption.history, new StringDateComparator());
+        String lastConsumption = consumption.history.get(consumption.history.size() - 1);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        try {
+            Date date = dateFormat.parse(lastConsumption);
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(date);
+
+            // If last meal have already been logged, hide log meal
+            if (c.get(Calendar.YEAR) == cal.get(Calendar.YEAR) &&
+                    c.get(Calendar.DAY_OF_YEAR) == cal.get(Calendar.DAY_OF_YEAR) &&
+                    getCurrentMealTime(c.get(Calendar.HOUR_OF_DAY)).equals(
+                    getCurrentMealTime(cal.get(Calendar.HOUR_OF_DAY)))) {
+                mLogMeat.setVisibility(View.GONE);
+            } else {
+                mLogMeat.setVisibility(View.VISIBLE);
+            }
+        } catch (ParseException e) { }
+    }
+
     private void logout() {
         FirebaseAuth.getInstance().signOut();
         Intent intent = new Intent(this, LoginActivity.class);
@@ -209,7 +218,7 @@ public class MainActivity extends AppCompatActivity {
 
     private class StringDateComparator implements Comparator<String>
     {
-        final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         public int compare(String lhs, String rhs)
         {
             try {
@@ -218,5 +227,20 @@ public class MainActivity extends AppCompatActivity {
                 return 1;
             }
         }
+    }
+
+    private String getCurrentMealTime(int hour) {
+        String currentMeal = getString(R.string.dinner);
+
+        if (hour < 11) {
+            currentMeal = getString(R.string.breakfast);
+        }
+        else if (hour < 14) {
+            currentMeal = getString(R.string.lunch);
+        }
+        else if (hour < 17) {
+            currentMeal = getString(R.string.snack);
+        }
+        return currentMeal;
     }
 }
