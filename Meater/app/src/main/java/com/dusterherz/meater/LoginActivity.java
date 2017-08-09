@@ -179,6 +179,7 @@ public class LoginActivity extends AppCompatActivity {
     private void openMainActivity(FirebaseUser user) {
         String uid = user.getUid();
         Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
         intent.putExtra(EXTRA_USER_UID, uid);
         startActivity(intent);
     }
