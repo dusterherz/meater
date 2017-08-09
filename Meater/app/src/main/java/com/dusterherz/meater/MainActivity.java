@@ -24,6 +24,9 @@ import android.widget.Toast;
 
 import com.dusterherz.meater.decorators.EventDecorator;
 import com.dusterherz.meater.models.Consumption;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -41,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView mTxtConsumption;
     private View mLogMeat;
     private MaterialCalendarView mCldMeat;
+    private AdView mAdView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +74,13 @@ public class MainActivity extends AppCompatActivity {
         txtCurrentMeal.setText(currentMeal);
 
         updateConsumptionUi();
+
+        MobileAds.initialize(this, "ca-app-pub-9313554900500013/8566325080");
+        mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder()
+            .addTestDevice("1C43FEF38833C0DF017DD3523FE7FF8E")
+            .build();
+        mAdView.loadAd(adRequest);
     }
 
     @Override
