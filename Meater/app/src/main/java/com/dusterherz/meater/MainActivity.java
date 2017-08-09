@@ -239,7 +239,7 @@ public class MainActivity extends AppCompatActivity {
             } catch (ParseException e) { }
         }
         EventDecorator eventDecorator = new EventDecorator(
-                getResources().getColor(R.color.colorAccent),
+                getResources().getDrawable(R.drawable.steak),
                 dates);
         mCldMeat.addDecorator(eventDecorator);
     }

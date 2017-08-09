@@ -1,5 +1,8 @@
 package com.dusterherz.meater.decorators;
 
+import android.content.Context;
+import android.graphics.drawable.Drawable;
+
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.DayViewDecorator;
 import com.prolificinteractive.materialcalendarview.DayViewFacade;
@@ -16,12 +19,12 @@ import java.util.HashSet;
 
 public class EventDecorator implements DayViewDecorator {
 
-    private final int color;
     private final HashSet<CalendarDay> dates;
+    private final Drawable drawable;
 
-    public EventDecorator(int color, Collection<CalendarDay> dates) {
-        this.color = color;
+    public EventDecorator(Drawable drawable, Collection<CalendarDay> dates) {
         this.dates = new HashSet<>(dates);
+        this.drawable = drawable;
     }
 
     @Override
@@ -31,6 +34,6 @@ public class EventDecorator implements DayViewDecorator {
 
     @Override
     public void decorate(DayViewFacade view) {
-        view.addSpan(new DotSpan(5, color));
+        view.addSpan(new SteakSpan(drawable));
     }
 }
