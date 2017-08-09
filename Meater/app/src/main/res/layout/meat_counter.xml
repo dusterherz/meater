@@ -6,7 +6,8 @@
     android:id="@+id/card_view_counter"
     android:layout_width="match_parent"
     android:layout_height="200dp"
-    card_view:cardCornerRadius="4dp">
+    card_view:cardCornerRadius="4dp"
+    card_view:cardUseCompatPadding="true">
 
         <RelativeLayout
             android:layout_width="match_parent"
