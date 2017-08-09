@@ -7,6 +7,8 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +22,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.dusterherz.meater.decorators.EventDecorator;
 import com.dusterherz.meater.models.Consumption;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -27,6 +30,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
+import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -35,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     private String mUserUid;
     private TextView mTxtConsumption;
     private View mLogMeat;
+    private MaterialCalendarView mCldMeat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,8 +52,18 @@ public class MainActivity extends AppCompatActivity {
         mTxtConsumption = (TextView) findViewById(R.id.txt_times_meat);
                 mDatabase = FirebaseDatabase.getInstance().getReference();
         mLogMeat = findViewById(R.id.cardboard_add_meat);
+        mCldMeat = (MaterialCalendarView) findViewById(R.id.cld_meat);
 
-        //Init
+        // Set calendar
+        mCldMeat.state().edit()
+                .setFirstDayOfWeek(Calendar.MONDAY)
+                .setMinimumDate(CalendarDay.from(2016, 0, 0))
+                .setMaximumDate(CalendarDay.from(c.get(Calendar.YEAR),
+                        c.get(Calendar.MONTH),
+                        c.getActualMaximum(Calendar.DAY_OF_MONTH)))
+                .commit();
+
+        // Set counter
         int time = c.get(Calendar.HOUR_OF_DAY);
         String currentMeal = String.format(getString(R.string.log_meat), getCurrentMealTime(time));
         TextView txtCurrentMeal = (TextView)findViewById(R.id.textview_log_meat);
@@ -145,6 +161,7 @@ public class MainActivity extends AppCompatActivity {
                     if (mTxtConsumption.getVisibility() == View.INVISIBLE)
                         mTxtConsumption.setVisibility(View.VISIBLE);
                     mTxtConsumption.setText(String.format(getString(R.string.number_times_meat), consumption.weekly));
+                    updateCalendar(consumption);
                     Log.d(TAG, "Update data");
                 }
                 else {
@@ -164,9 +181,8 @@ public class MainActivity extends AppCompatActivity {
         String lastConsumption = consumption.history.get(consumption.history.size() - 1);
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         try {
-            Date date = dateFormat.parse(lastConsumption);
             Calendar cal = Calendar.getInstance();
-            cal.setTime(date);
+            cal.setTime(dateFormat.parse(lastConsumption));
             if (cal.get(Calendar.WEEK_OF_YEAR) != c.get(Calendar.WEEK_OF_YEAR)) {
                 resetWeeklyConsumption();
             }
@@ -194,9 +210,8 @@ public class MainActivity extends AppCompatActivity {
         String lastConsumption = consumption.history.get(consumption.history.size() - 1);
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         try {
-            Date date = dateFormat.parse(lastConsumption);
             Calendar cal = Calendar.getInstance();
-            cal.setTime(date);
+            cal.setTime(dateFormat.parse(lastConsumption));
 
             // If last meal have already been logged, hide log meal
             if (c.get(Calendar.YEAR) == cal.get(Calendar.YEAR) &&
@@ -208,6 +223,25 @@ public class MainActivity extends AppCompatActivity {
                 mLogMeat.setVisibility(View.VISIBLE);
             }
         } catch (ParseException e) { }
+    }
+
+    private void updateCalendar(Consumption consumption) {
+        List<CalendarDay> dates = new ArrayList<CalendarDay>();
+        for (String date: consumption.history) {
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+            try {
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(dateFormat.parse(date));
+                dates.add(new CalendarDay(cal.get(Calendar.YEAR),
+                        cal.get(Calendar.MONTH),
+                        cal.get(Calendar.DAY_OF_MONTH)));
+            } catch (ParseException e) { }
+        }
+        EventDecorator eventDecorator = new EventDecorator(
+                getResources().getDrawable(R.drawable.steak),
+                dates);
+        mCldMeat.addDecorator(eventDecorator);
     }
 
     private void logout() {
