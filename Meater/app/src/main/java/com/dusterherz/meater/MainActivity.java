@@ -12,6 +12,7 @@ import java.util.Locale;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -41,6 +42,7 @@ import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
+    private static final String STATE_USER_ID = "userId";
     private final Calendar c = Calendar.getInstance();
     private DatabaseReference mDatabase;
     private String mUserUid;
@@ -56,12 +58,19 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Intent intent = getIntent();
-        mUserUid = intent.getStringExtra(LoginActivity.EXTRA_USER_UID);
+        if (savedInstanceState != null) {
+            mUserUid = savedInstanceState.getString(STATE_USER_ID);
+        } else {
+            mUserUid = intent.getStringExtra(LoginActivity.EXTRA_USER_UID);
+        }
         mTxtConsumption = (TextView) findViewById(R.id.txt_times_meat);
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mLogMeat = findViewById(R.id.cardboard_add_meat);
         mCldMeat = (MaterialCalendarView) findViewById(R.id.cld_meat);
         mSettings = getDefaultSharedPreferences(MainActivity.this);
+        if (mUserUid == null) {
+            mUserUid = mSettings.getString("userID", null);
+        }
 
 
         // Set calendar
@@ -91,6 +100,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onPause() {
+        SharedPreferences.Editor editor = mSettings.edit();
+        editor.putString("userID", mUserUid);
+        editor.apply();
+        super.onPause();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
@@ -103,7 +120,24 @@ public class MainActivity extends AppCompatActivity {
             logout();
             return true;
         }
+        if (item.getItemId() == R.id.icn_infos) {
+            getInfos();
+            return true;
+        }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putString(STATE_USER_ID, mUserUid);
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState, PersistableBundle persistentState) {
+        super.onRestoreInstanceState(savedInstanceState, persistentState);
+
+        mUserUid = savedInstanceState.getString(STATE_USER_ID);
     }
 
     public void incrementMeatCounter(View v) {
@@ -292,6 +326,11 @@ public class MainActivity extends AppCompatActivity {
         FirebaseAuth.getInstance().signOut();
         Intent intent = new Intent(this, LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+        startActivity(intent);
+    }
+
+    private void getInfos() {
+        Intent intent = new Intent(this, InfosActivity.class);
         startActivity(intent);
     }
 
