@@ -1,7 +1,6 @@
 # Meater
 
-![Meater Screenshot](http://i.imgur.com/3OmEb9w.jpg)
-![Second Meater Screenshort](http://i.imgur.com/FvwErKW.png)
+<img src="http://i.imgur.com/3OmEb9w.jpg" width="40%">  <img src="http://i.imgur.com/FvwErKW.png" width="40%">
 
 Meater is an Android app that measures your meat consumption over a week (for the moment !). With Meater, you can know now how many times you eat meat and then try to reduce your quantity of it. This can be helpfull for people who try to be vegetarian, for lovers of animals or for those who want to reduce their impact on the Earth.
 
