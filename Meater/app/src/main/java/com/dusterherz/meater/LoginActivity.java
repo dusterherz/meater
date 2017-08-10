@@ -60,6 +60,15 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        mAuth = FirebaseAuth.getInstance();
+        if (mAuth.getCurrentUser() != null) {
+            openMainActivity(mAuth.getCurrentUser());
+        }
+        super.onResume();
+    }
+
     private final View.OnClickListener login = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -179,6 +188,7 @@ public class LoginActivity extends AppCompatActivity {
     private void openMainActivity(FirebaseUser user) {
         String uid = user.getUid();
         Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         intent.putExtra(EXTRA_USER_UID, uid);
         startActivity(intent);
     }

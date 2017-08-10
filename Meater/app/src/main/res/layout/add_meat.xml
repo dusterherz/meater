@@ -24,7 +24,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true">
+            android:layout_below="@id/textview_log_meat"
+            android:layout_marginTop="@dimen/activity_vertical_margin">
 
             <ImageView
                 android:id="@+id/button_meat"
@@ -49,7 +50,8 @@
                 android:contentDescription="@string/no_meat"
                 android:src="@drawable/no_steak"
                 android:layout_toRightOf="@id/button_meat"
-                android:layout_toEndOf="@id/button_meat"/>
+                android:layout_toEndOf="@id/button_meat"
+                android:onClick="onNoMeatButtonPressed"/>
 
         </RelativeLayout>
     </RelativeLayout>

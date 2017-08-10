@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Locale;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -36,6 +37,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 
+import static android.preference.PreferenceManager.getDefaultSharedPreferences;
+
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private final Calendar c = Calendar.getInstance();
@@ -45,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
     private View mLogMeat;
     private MaterialCalendarView mCldMeat;
     private AdView mAdView;
+    private SharedPreferences mSettings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,9 +58,11 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = getIntent();
         mUserUid = intent.getStringExtra(LoginActivity.EXTRA_USER_UID);
         mTxtConsumption = (TextView) findViewById(R.id.txt_times_meat);
-                mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
         mLogMeat = findViewById(R.id.cardboard_add_meat);
         mCldMeat = (MaterialCalendarView) findViewById(R.id.cld_meat);
+        mSettings = getDefaultSharedPreferences(MainActivity.this);
+
 
         // Set calendar
         mCldMeat.state().edit()
@@ -75,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
 
         updateConsumptionUi();
 
+        // Ads
         MobileAds.initialize(this, "ca-app-pub-9313554900500013/8566325080");
         mAdView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder()
@@ -100,7 +107,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void incrementMeatCounter(View v) {
-        Log.d(TAG, "Increment meat");
         final DatabaseReference consumptionUser = mDatabase.child(mUserUid);
         consumptionUser.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -141,18 +147,25 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    public void onNoMeatButtonPressed(View v){
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        Calendar calendar = Calendar.getInstance();
+        Date now = calendar.getTime();
+        SharedPreferences.Editor editor = mSettings.edit();
+        editor.putString("lastNoMeat", simpleDateFormat.format(now));
+        editor.apply();
+        mLogMeat.setVisibility(View.GONE);
+    }
+
     private void updateConsumptionUi() {
         final Consumption newConsumption = new Consumption(0, new ArrayList<String>());
 
-        Log.d(TAG, "Update Interface");
-        // check if user exists. If not, create it.
+        // Check if user exists. If not, create it.
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (!dataSnapshot.hasChild(mUserUid)) {
+                if (!dataSnapshot.hasChild(mUserUid))
                     mDatabase.child(mUserUid).setValue(newConsumption);
-                    Log.d(TAG, "Create a user");
-                }
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -167,18 +180,16 @@ public class MainActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Consumption consumption = dataSnapshot.getValue(Consumption.class);
                 if (consumption != null) {
-                    checkWeeklyClean(consumption);
+                    checkWeeklyCleanup(consumption);
                     checkIfAlreadyVoted(consumption);
                     if (mTxtConsumption.getVisibility() == View.INVISIBLE)
                         mTxtConsumption.setVisibility(View.VISIBLE);
                     mTxtConsumption.setText(String.format(getString(R.string.number_times_meat), consumption.weekly));
                     updateCalendar(consumption);
-                    Log.d(TAG, "Update data");
                 }
                 else {
                     mDatabase.child(mUserUid).setValue(newConsumption);
                     mTxtConsumption.setText(String.format(getString(R.string.number_times_meat), 0));
-                    Log.d(TAG, "Data set by default");
                 }
             }
 
@@ -187,7 +198,10 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void checkWeeklyClean(Consumption consumption) {
+    private void checkWeeklyCleanup(Consumption consumption) {
+        if (consumption.history == null) {
+            return;
+        }
         Collections.sort(consumption.history, new StringDateComparator());
         String lastConsumption = consumption.history.get(consumption.history.size() - 1);
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
@@ -215,28 +229,47 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
     private void checkIfAlreadyVoted(Consumption consumption) {
-        Collections.sort(consumption.history, new StringDateComparator());
-        String lastConsumption = consumption.history.get(consumption.history.size() - 1);
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-        try {
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(dateFormat.parse(lastConsumption));
+        Calendar cal = Calendar.getInstance();
 
-            // If last meal have already been logged, hide log meal
+        // If last meal without meat have already been logged, hide log meal
+        String lastNoMeat = mSettings.getString("lastNoMeat", "2016-01-01T00:00:00");
+        try {
+            cal.setTime(dateFormat.parse(lastNoMeat));
             if (c.get(Calendar.YEAR) == cal.get(Calendar.YEAR) &&
                     c.get(Calendar.DAY_OF_YEAR) == cal.get(Calendar.DAY_OF_YEAR) &&
                     getCurrentMealTime(c.get(Calendar.HOUR_OF_DAY)).equals(
-                    getCurrentMealTime(cal.get(Calendar.HOUR_OF_DAY)))) {
+                            getCurrentMealTime(cal.get(Calendar.HOUR_OF_DAY)))) {
                 mLogMeat.setVisibility(View.GONE);
-            } else {
-                mLogMeat.setVisibility(View.VISIBLE);
+                return;
+            }
+
+            // If last meal with meat have already been logged, hide log meal
+            if (consumption.history == null) {
+                return;
+            }
+            Collections.sort(consumption.history, new StringDateComparator());
+            String lastConsumption = consumption.history.get(consumption.history.size() - 1);
+            cal.setTime(dateFormat.parse(lastConsumption));
+
+            if (c.get(Calendar.YEAR) == cal.get(Calendar.YEAR) &&
+                    c.get(Calendar.DAY_OF_YEAR) == cal.get(Calendar.DAY_OF_YEAR) &&
+                    getCurrentMealTime(c.get(Calendar.HOUR_OF_DAY)).equals(
+                            getCurrentMealTime(cal.get(Calendar.HOUR_OF_DAY)))) {
+                mLogMeat.setVisibility(View.GONE);
+                return;
             }
         } catch (ParseException e) { }
+
+        // Else, set log meat visible.
+        mLogMeat.setVisibility(View.VISIBLE);
     }
 
     private void updateCalendar(Consumption consumption) {
+        if (consumption.history == null) {
+            return;
+        }
         List<CalendarDay> dates = new ArrayList<CalendarDay>();
         for (String date: consumption.history) {
 
@@ -258,6 +291,7 @@ public class MainActivity extends AppCompatActivity {
     private void logout() {
         FirebaseAuth.getInstance().signOut();
         Intent intent = new Intent(this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         startActivity(intent);
     }
 
