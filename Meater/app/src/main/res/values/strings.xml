@@ -28,4 +28,10 @@
     <string name="logout">déconnexion</string>
     <string name="title">Meater</string>
     <string name="txt_calendar_meat">Calendrier de consommation de viande :</string>
+    <string name="infos">Informations</string>
+    <string name="txt_about_me">Application crée par Dusterherz</string>
+    <string name="img_github">Icône github</string>
+    <string name="img_twitter">icône twitter</string>
+    <string name="txt_about_icon">Icône steak crée par Freepik (http://www.freepik.com) et disponible sur Flaticon (http://www.flaticon.com). Icône Twitter et Github crée par icons8 (https://icons8.com).</string>
+    <string name="txt_about_calendar">Calendrier crée avec l\'aide de MaterialCalendarView (https://github.com/prolificinteractive/material-calendarview/)</string>
 </resources>

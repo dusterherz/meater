@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:layout_margin="@dimen/activity_vertical_margin">
+
+    <TextView
+        android:id="@+id/txt_about_me"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/txt_about_me"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:autoLink="web"
+        android:linksClickable="true"/>
+
+    <RelativeLayout
+        android:id="@+id/lyt_icons"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/txt_about_me">
+
+        <ImageView
+            android:id="@+id/img_twitter"
+            android:src="@drawable/twitter"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="@dimen/button_horizontal_margin"
+            android:layout_marginRight="@dimen/button_horizontal_margin"
+            android:contentDescription="@string/img_twitter"/>
+
+        <ImageView
+            android:id="@+id/img_github"
+            android:src="@drawable/octocat"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_toRightOf="@id/img_twitter"
+            android:layout_toEndOf="@id/img_twitter"
+            android:contentDescription="@string/img_github"/>
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/txt_about_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:layout_below="@id/lyt_icons"
+        android:text="@string/txt_about_icon"
+        android:autoLink="web"
+        android:linksClickable="true"/>
+
+    <TextView
+        android:id="@+id/txt_about_calendar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:layout_below="@id/txt_about_icon"
+        android:text="@string/txt_about_calendar"
+        android:autoLink="web"
+        android:linksClickable="true"/>
+
+</RelativeLayout>
